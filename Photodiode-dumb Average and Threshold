@@ -1,0 +1,149 @@
+double PinIn1=A3; //PD1
+double PinIn2=A4; //PD2
+double PinIn3=A5; //PD1
+double val1=0;
+double val2=0;
+double val3=0;
+double avg1=0;
+double avg2=0;
+double avg3=0;
+double thresh1=0;
+double thresh2=0;
+double thresh3=0;
+double percentage=0.0015;
+long time_t=0;
+bool flag = false;
+const int Division_var=100;
+long A=1;
+long B=1;
+unsigned long previousMillis = 0; 
+const long interval = 1000; 
+
+void setup() {  
+  Serial.begin(9600);
+  pinMode(PinIn1, INPUT); //Photodiode 1
+  pinMode(PinIn2, INPUT); //Photodiode 2
+  pinMode(PinIn3, INPUT); //Photodiode 3
+
+  time_t=micros();
+}
+
+void ambientlight (){
+    delay(200); //A delay provides time for the system to initialize properly 
+
+    const int Division_var=1000;
+    for(int i=0; i<Division_var; i++){
+       val1+=analogRead(PinIn1);  //For loop captures the first 100 values and add's it all together
+    }
+
+    val1=val1/Division_var; //Creating an average of the 100 values
+
+    //AL=val1;  //Saving the average as the ambient light level (AL) 
+}
+
+void Cache_sum(){
+
+double cache_avg1=0;
+double cache_avg2=0;
+double cache_avg3=0;
+double A0_OUTPUT1=0;
+double A0_OUTPUT2=0;
+double A0_OUTPUT3=0;
+
+double num1=0, num2=0, num3=0, num4=0;
+int sum_1=0;
+
+double num1_2=0, num2_2=0, num3_2=0, num4_2=0;
+int sum_2=0;
+//int rolling_num=0;
+
+double num1_3=0, num2_3=0, num3_3=0, num4_3=0;
+int sum_3=0;
+//int rolling_num=0;
+
+  num4 = num3;
+  num3 = num2;
+  num2 = num1;
+  num1 = analogRead(PinIn1);
+
+  sum_1 = num1+num2+num3+num4;
+
+  cache_avg1= sum_1/4;
+
+  num4_2 = num3_2;
+  num3_2 = num2_2;
+  num2_2 = num1_2;
+  num1_2 = analogRead(PinIn2);
+
+  sum_2 = num1_2+num2_2+num3_2+num4_2;
+
+  cache_avg2= sum_1/4;
+
+  num4_3 = num3_3;
+  num3_3 = num2_3;
+  num2_3= num1_3;
+  num1_3= analogRead(PinIn3);
+
+  sum_2 = num1_3+num2_3+num3_3+num4_3;
+
+  cache_avg3= sum_1/4;
+}
+
+void Thresholding_Loop(){
+    //delay(200); //A delay provides time for the system to initialize properly 
+    val1=0;
+    val2=0;
+    val3=0;
+    
+    for(int i=0; i<Division_var; i++){
+       val1+=analogRead(PinIn1);  //For loop captures the first 1000 values and add's it all together
+       val2+=analogRead(PinIn2);
+       val3+=analogRead(PinIn3);
+    }
+
+    val1=val1/Division_var; //Creating an average of the 1000 values
+    val2=val2/Division_var;
+    val3=val3/Division_var;
+    
+    avg1=val1;  //Creating the avg value of input 1,2,3
+    avg2=val2;
+    avg3=val3;
+
+    thresh1=avg1+(avg1*percentage);
+    thresh2=avg2+(avg2*percentage);
+    thresh3=avg3+(avg3*percentage);  
+}
+
+void loop(){
+   // A = A << 1;
+    //Serial.println(A);
+   /* 
+    if (A==0){
+      A = 1;
+      B = B << 1;
+      if(B==0){
+        B=1;
+        Serial.println("Refreshed");
+        Thresholding_Loop();
+      }
+    }*/
+/*    
+unsigned long currentMillis = millis();
+    if (currentMillis - previousMillis >= interval) {
+      //Serial.println("Refreshed");
+    previousMillis = currentMillis;
+    Thresholding_Loop();
+    }*/
+    
+   if (flag==false){  //One time run flag: This ensures the average and threshold is set only once
+   //Serial.print("Flag set");
+   Thresholding_Loop();
+   flag=true;
+   }
+   
+    val1=analogRead(PinIn1);
+    //val2=analogRead(PinIn2);
+    //val3=analogRead(PinIn3);
+    
+  Serial.print(val1);  Serial.print(" "); Serial.print(avg1); Serial.print(" "); Serial.println(thresh1); //Photodiode 1 signal, Average, Threshold
+ }
