@@ -1,0 +1,43 @@
+#include <avr_stl.h>
+#include <vector>
+
+int LED_Driving_pin=6; //LED emitting PIN (Can Also be used for PWM)
+
+byte char_byte = 0;
+std::vector <byte> vect_string;
+
+String string_input = "~Hello World~";//Hello World
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(LED_Driving_pin, OUTPUT);//LED's are set to output
+  
+    for(int i=0; i<string_input.length(); i++){
+      vect_string.push_back(string_input[i]); //Transfers the string characters into the rolling vector
+      }
+  }
+
+void Sentence_write(){ //This function takes the string and converts the letters into binary
+    for(int i=0; i<string_input.length(); i++){
+      char_byte = 64; // Setting the binary value to 10000000
+      for(int j=0; j<8; j++){
+        if((vect_string[i]&char_byte)>0){ //If the current bit is high, then swtich the LED on (This is a bit-wise-AND check)
+          //Serial.println("1"); //Checking the output
+          digitalWrite(LED_Driving_pin, HIGH);
+          delay(6);
+        }
+        else{ //else the current bit is low and therefore switch the LED off
+          //Serial.println("0"); //Checking the output
+          digitalWrite(LED_Driving_pin, LOW);
+          delay(6);
+        }
+       char_byte=char_byte>>1; //Allows for the binary count to be shifted up by one place
+      }
+      //delay(5);
+     digitalWrite(LED_Driving_pin, LOW); //Switches the LED so that LED does not remain on for another cycle 
+    }
+  }
+
+void loop() {
+  Sentence_write(); //Calls the function every loop
+}
