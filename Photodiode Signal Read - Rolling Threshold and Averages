@@ -1,0 +1,85 @@
+#include <avr_stl.h>
+
+#include <vector>
+
+double PinIn1=A3; //PD1
+double PinIn2=A4; //PD2
+double PinIn3=A5; //PD3
+
+double val1=0;
+double val2=0;
+double val3=0;
+
+double avg1=0;
+double avg2=0;
+double avg3=0;
+
+double sum1=0;
+double sum2=0;
+double sum3=0;
+
+double thresh1=0;
+double thresh2=0;
+double thresh3=0;
+
+double percentage = 0.0007;
+
+int sample_size=100;
+
+std::vector <int> vect1;
+std::vector <int> vect2;
+std::vector <int> vect3;
+
+void setup() {  
+  Serial.begin(9600);
+  pinMode(PinIn1, INPUT); //Photodiode 1
+  pinMode(PinIn2, INPUT); //Photodiode 2
+  pinMode(PinIn3, INPUT); //Photodiode 3
+}
+
+void loop(){
+  
+    vect1.push_back(analogRead(PinIn1));
+    vect2.push_back(analogRead(PinIn2));
+    vect3.push_back(analogRead(PinIn3));
+
+  
+    
+    if(vect1.size()>sample_size){
+      vect1.erase(vect1.begin());
+      vect2.erase(vect2.begin());
+      vect3.erase(vect3.begin());
+    }
+
+    for(int i=0; i<sample_size; i++){
+      sum1+=vect1[i];
+      sum2+=vect2[i];
+      sum3+=vect3[i];
+      }
+      
+    avg1=(sum1/sample_size);
+    avg2=(sum2/sample_size);
+    avg3=(sum3/sample_size);
+    
+    thresh1=avg1+avg1*percentage;
+    thresh2=avg2+avg2*percentage;
+    thresh3=avg3+avg3*percentage;
+
+    //Serial.print(vect1[vect1.size()-1]); Serial.print(" "); Serial.print(avg1); Serial.print(" "); Serial.println(thresh1);
+
+    //Serial.print(vect2[vect2.size()-1]);  Serial.print(" "); Serial.print(avg2); Serial.print(" "); Serial.println(thresh2);
+
+   // Serial.print(vect3[vect3.size()-1]);  Serial.print(" "); Serial.print(avg3); Serial.print(" "); Serial.println(thresh3);
+
+    sum1=0;
+    sum2=0;
+    sum3=0;
+
+    avg1=0;
+    avg2=0;
+    avg3=0;
+
+    thresh1=0;
+    thresh2=0;
+    thresh3=0;
+ }
