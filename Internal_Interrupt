@@ -1,0 +1,17 @@
+#include <TimerOne.h>
+bool check=false;
+void setup(){
+Serial.begin(9600);
+Timer1.initialize(150000); // initialize timer1, and set a 1 second period
+Timer1.attachInterrupt(Blink); // attaches Blink() as a timer interrupt function
+}
+
+void Blink(void){
+check=!check;
+}
+
+void loop(){
+if(check){digitalWrite(A0, HIGH);}
+else{digitalWrite(A0, LOW);}
+delay(5);
+}
