@@ -100,16 +100,17 @@ void loop(){
     
   if(a=='~'&&count==8){
     Serial.print("~");
-    if(a=='#'){Serial.println(mem_string);check= !check;mem_string="";}
+    if(check){Serial.println(mem_string);;mem_string="";}
+    check= !check;
     count=0;
     a=0;
   }
 
-   else if(check){
+   else if(check&&count==8){
     b=a;
-    mem_string+=b;
-       /* Serial.print(a, BIN);
-    Serial.print(" ");
+    //mem_string+=b;
+    Serial.println(a, BIN);
+    /*Serial.print(" ");
     Serial.print(a, DEC);
     Serial.print(" ");
     Serial.println(b);
@@ -135,5 +136,5 @@ void loop(){
     thresh1_lower=0;
     thresh2_lower=0;
     thresh3_lower=0;
-delay(2);
+delay(75);
 }
