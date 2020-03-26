@@ -48,23 +48,23 @@ int t=0;
 
 void setup(){
 Serial.begin(9600);
-Timer1.initialize(15000); // initialize timer1, and set a 1 second period
+Timer1.initialize(150000); // initialize timer1, and set a 1 second period (0.15)
 Timer1.attachInterrupt(Timer); // attaches Blink() as a timer interrupt function
 }
 
 void Timer(void){
-  timing_switch=!timing_switch;
-     if(analogRead(PinIn1)>=thresh1_upper&&timing_switch==true){
+   if(analogRead(PinIn1)>=thresh1_upper&&timing_switch==false){
       buff.push_back(true);
     }
     
-    if(analogRead(PinIn1)<=thresh1_lower&&timing_switch==false){
+    if(analogRead(PinIn1)<=thresh1_lower&&timing_switch==true){
       buff.push_back(false);
     }
+    timing_switch=!timing_switch;
 }
 
 void loop(){
-  Serial.println(a);
+  //Serial.println(a);
   
     vect1.push_back(analogRead(PinIn1));
     vect2.push_back(analogRead(PinIn2));
@@ -152,7 +152,7 @@ void loop(){
     t=846;
   }
 
-  //Serial.print(vect1[vect1.size()-1]);Serial.print(" ");Serial.println(t);//Serial.print(" ");Serial.print(thresh1_upper);Serial.print(" ");Serial.print(thresh1_lower);
+  Serial.print(vect1[vect1.size()-1]);Serial.print(" ");Serial.println(t);//Serial.print(" ");Serial.print(thresh1_upper);Serial.print(" ");Serial.print(thresh1_lower);
     sum1=0;
     sum2=0;
     sum3=0;
@@ -168,5 +168,5 @@ void loop(){
     thresh1_lower=0;
     thresh2_lower=0;
     thresh3_lower=0;
-delay(1);
+delay(10);
 }
