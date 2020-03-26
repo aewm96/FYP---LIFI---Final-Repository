@@ -35,7 +35,7 @@ std::vector <int> vect1;
 std::vector <int> vect2;
 std::vector <int> vect3;
 
-std::vector <bit> buff;
+std::vector <bool> buff;
 
 byte a=0;
 char b=0;
@@ -44,24 +44,28 @@ int count = 0;
 String mem_string="";
 
 bool timing_switch=false;
+int t=0;
 
 void setup(){
 Serial.begin(9600);
-Timer1.initialize(150000); // initialize timer1, and set a 1 second period
+Timer1.initialize(15000); // initialize timer1, and set a 1 second period
 Timer1.attachInterrupt(Timer); // attaches Blink() as a timer interrupt function
 }
 
 void Timer(void){
-     if(analogRead(PinIn1)>=thresh1_upper){
-      buff.push_back(1);
+  timing_switch=!timing_switch;
+     if(analogRead(PinIn1)>=thresh1_upper&&timing_switch==true){
+      buff.push_back(true);
     }
     
-    if(analogRead(PinIn1)<=thresh1_lower){
-      buff.push_back(0);
+    if(analogRead(PinIn1)<=thresh1_lower&&timing_switch==false){
+      buff.push_back(false);
     }
 }
 
 void loop(){
+  Serial.println(a);
+  
     vect1.push_back(analogRead(PinIn1));
     vect2.push_back(analogRead(PinIn2));
     vect3.push_back(analogRead(PinIn3));
@@ -98,7 +102,7 @@ void loop(){
           a+=1;
         }
         else{
-          a=<<1;
+          a=a<<1;
         }
         buff.erase(buff.begin());
        }
@@ -112,14 +116,13 @@ void loop(){
           a+=1;
         }
         else{
-          a=>>1;
+          a=a<<1;
         }
-        buff.erase(buff[buff.begin()]);
+        buff.erase(buff.begin());
         count++;
       }
      }
-     
-      
+        
   if(a=='~'&&count==8){
     Serial.print("~");
     if(check){Serial.println(mem_string);;mem_string="";}
@@ -130,7 +133,7 @@ void loop(){
 
    else if(check&&count==8){
     b=a;
-    //mem_string+=b;
+    mem_string+=b;
     Serial.println(a, BIN);
     /*Serial.print(" ");
     Serial.print(a, DEC);
@@ -140,9 +143,16 @@ void loop(){
     }
 
   if(count==8&&check){count=0;}
-  else{count=7;}
+  else if (count==8){count=7;}
 
- // Serial.print(vect1[vect1.size()-1]);Serial.print(" ");Serial.print(thresh1_upper);Serial.print(" ");Serial.println(thresh1_lower);
+  if(timing_switch==1){
+    t=852;
+  }
+  else{
+    t=846;
+  }
+
+  //Serial.print(vect1[vect1.size()-1]);Serial.print(" ");Serial.println(t);//Serial.print(" ");Serial.print(thresh1_upper);Serial.print(" ");Serial.print(thresh1_lower);
     sum1=0;
     sum2=0;
     sum3=0;
@@ -158,5 +168,5 @@ void loop(){
     thresh1_lower=0;
     thresh2_lower=0;
     thresh3_lower=0;
-delay(75);
+delay(1);
 }
