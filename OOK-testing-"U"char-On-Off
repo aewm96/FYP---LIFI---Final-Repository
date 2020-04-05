@@ -1,0 +1,34 @@
+#define TX_DATA 6 //Data line is set to PIN 6 of the Arduino Uno board
+
+//Transmit rate bps (bits per second) - This controls how many bits are streamed across 
+#define TX_RATE 25
+
+const char *Data_String = "U";//~Hello World~
+
+
+void setup(){
+  Serial.begin(9600);
+  pinMode(TX_DATA, OUTPUT); //PIN 6 is the output pin
+
+}
+
+
+void loop() {
+
+      for(int byte_index = 0; byte_index<strlen(Data_String); byte_index++){
+      
+        char data_char=Data_String[byte_index]; //Current transmitting data is based from the current byte index
+        
+          for(int bit_index=0; bit_index<8; bit_index++){
+            
+            bool bit_check = data_char & (0x80  >> bit_index); //Boolean check for if the bit's match between 10000000 and the character's bytes
+            
+              digitalWrite(TX_DATA, bit_check); // Sets PIN 6 as high or low based on the boolean check prior
+              
+              //delay(1000/TX_RATE); //Millie seconds per bit (1000/5)=200ms per bit
+          }
+          
+          //Serial.print(Data_String[byte_index]);
+      }
+    
+  }
