@@ -1,0 +1,11 @@
+#define OutPin 6 //Output set to PIN 6
+
+void setup() {
+  pinMode(OutPin, OUTPUT);
+
+}
+
+void loop() {
+  digitalWrite(OutPin, HIGH);
+  digitalWrite(OutPin, LOW);
+}
