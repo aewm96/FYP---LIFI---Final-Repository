@@ -1,0 +1,21 @@
+#define PWM_PIN 6
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(PWM_PIN, OUTPUT);
+
+}
+
+void loop() {
+  analogWrite(PWM_PIN, 255);
+  delay(2);
+ /* for(int i=0; i<256; i++){
+    analogWrite(PWM_PIN, i);
+    delay(1);
+  }
+
+   for(int i=255; i>0; i--){
+    analogWrite(PWM_PIN, i);
+    delay(1);
+  }*/
+}
