@@ -1,0 +1,15 @@
+function [time, channel_1,channel_2] = LTspice_reader(file_name)
+%% This function is able to extract a 2 column data output from LTspice
+file_string=[file_name, '.txt'];
+file = file_string;
+data = load(file,'%f', 'r');
+time = data(:,1); % time
+channel_1=data(:,2); %Channel 1 data: Emitter
+channel_2=data(:,3); %Channel 2 data: Receiver
+
+%v_out = data(:,2); % voltage input
+% op_amp1 = data(:,3); % voltage of Op-Amp 1
+% op_amp2 = data(:,4); % voltage of Op-Amp 2
+%voltage_opamp1_output, voltage_opamp2_output
+end
+
